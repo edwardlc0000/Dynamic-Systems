@@ -6,15 +6,15 @@
 import numpy as np
 from typing import Final
 
-g: Final[float] = 9.8 # gravity approximation
+g: Final[float] = -9.8 # gravity approximation
 
 class Pendulum:
     def __init__(self, L: float, theta_0: float, omega_0: float, mu: float):
-        self.L = L # length of pendulum
-        self.theta = theta_0 # initial angle
-        self.omega = omega_0 # initial angular velocity
-        self.mu = mu # damping factor
-        self.trace_path = [[self.theta, self.omega]]
+        self.L: float = L # length of pendulum
+        self.theta: float = theta_0 # initial angle
+        self.omega: float = omega_0 # initial angular velocity
+        self.mu: float = mu # damping factor
+        self.trace_path: list[list[float]] = [[self.theta, self.omega]]
     
     # describes angular velocity of a pendulum
     def theta_dot(self, step: float):
@@ -22,8 +22,9 @@ class Pendulum:
 
     # describes angular acceleration of a pendulum
     def theta_double_dot(self, step: float):
-        self.omega += (-(self.mu * self.omega) - ((g / self.L) * np.sin(self.theta))) * step
+        self.omega += (-(self.mu * self.omega) + ((g / self.L) * np.sin(self.theta))) * step
 
+    # updates position of the pendulum
     def update_theta(self, T: float, step: float):
         for t_i in np.arange(0, T, step):
             self.theta_double_dot(step)
