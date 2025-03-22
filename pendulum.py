@@ -6,7 +6,7 @@
 import numpy as np
 from typing import Final
 
-g: Final[float] = -9.8 # gravity approximation
+g: Final[float] = 9.8 # gravity approximation
 
 class Pendulum:
     def __init__(self, L: float, theta_0: float, omega_0: float, mu: float):
@@ -22,7 +22,7 @@ class Pendulum:
 
     # describes angular acceleration of a pendulum
     def theta_double_dot(self, step: float):
-        self.omega += (-(self.mu * self.omega) + ((g / self.L) * np.sin(self.theta))) * step
+        self.omega += (-(self.mu * self.omega) - ((g / self.L) * np.sin(self.theta))) * step
 
     # updates position of the pendulum
     def update_theta(self, T: float, step: float):
