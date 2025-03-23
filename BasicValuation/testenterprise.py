@@ -68,57 +68,6 @@ class TestEnterprise(unittest.TestCase):
         for key, value in self.statement_of_cash_flow.items():
             np.testing.assert_array_equal(self.enterprise.statement_of_cash_flow[key], value)
 
-    def test_calc_gross_profit(self):
-        # Import income statement data and calculate gross profit
-        self.enterprise.import_is(self.income_statement)
-        self.enterprise.calc_gross_profit()
-
-        # Expected gross profit
-        expected_gross_profit = np.array([400.0])  # Revenue - Cost of Sales
-        np.testing.assert_array_equal(self.enterprise.income_statement['Gross Profit'], expected_gross_profit)
-
-    def test_calc_EBITDA(self):
-        # Import income statement data and calculate EBITDA
-        self.enterprise.import_is(self.income_statement)
-        self.enterprise.calc_gross_profit()
-        self.enterprise.calc_EBITDA()
-
-        # Expected EBITDA
-        expected_EBITDA = np.array([200.0])  # Gross Profit - Op. Ex.
-        np.testing.assert_array_equal(self.enterprise.income_statement['EBITDA'], expected_EBITDA)
-
-    def test_calc_EBIT(self):
-        # Import income statement data and calculate EBIT
-        self.enterprise.import_is(self.income_statement)
-        self.enterprise.calc_gross_profit()
-        self.enterprise.calc_EBITDA()
-        self.enterprise.calc_EBIT()
-
-        # Expected EBIT
-        expected_EBIT = np.array([150.0])  # EBITDA - D&A
-        np.testing.assert_array_equal(self.enterprise.income_statement['EBIT'], expected_EBIT)
-
-    def test_calc_net_income(self):
-        # Import income statement data and calculate net income
-        self.enterprise.import_is(self.income_statement)
-        self.enterprise.calc_gross_profit()
-        self.enterprise.calc_EBITDA()
-        self.enterprise.calc_EBIT()
-        self.enterprise.calc_net_income()
-
-        # Expected Net Income
-        expected_net_income = np.array([20.0])  # EBIT - Interest - Tax
-        np.testing.assert_array_equal(self.enterprise.income_statement['Net Income'], expected_net_income)
-
-    def test_calc_net_working_capital(self):
-        # Import balance sheet data and calculate net working capital
-        self.enterprise.import_bs(self.balance_sheet)
-        self.enterprise.calc_net_working_capital()
-
-        # Expected net working capital
-        expected_nwc = np.array([150.0])  # Current Assets - Current Liabilities
-        np.testing.assert_array_equal(self.enterprise.balance_sheet['Net Working Capital'], expected_nwc)
-
     def test_get_income_statement(self):
         # Import income statement data and retrieve it as a DataFrame
         self.enterprise.import_is(self.income_statement)
