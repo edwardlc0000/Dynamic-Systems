@@ -74,8 +74,8 @@ class ProjectionEngine:
                 self.enterprise.statement_of_cash_flow['D&A'],
                 next_d_and_a
             )
-
-            next_net_cap_ex: float = self.enterprise.income_statement['Revenue'][-len(d_and_a_prior_npp_and_e) + i] * net_cap_ex_sales[i]
+            
+            next_net_cap_ex: float = self.enterprise.income_statement['Revenue'][-len(net_cap_ex_sales) + i] * net_cap_ex_sales[i]
             self.enterprise.statement_of_cash_flow['Net Cap. Ex.'] = np.append(
                 self.enterprise.statement_of_cash_flow['Net Cap. Ex.'],
                 next_net_cap_ex
@@ -87,7 +87,7 @@ class ProjectionEngine:
                 next_cap_ex
             )
 
-            next_npp_and_e: float = self.enterprise.balance_sheet['Net PP&E'][-1] + next_net_cap_ex
+            next_npp_and_e: float = self.enterprise.balance_sheet['Net PP&E'][-1] + next_cap_ex - next_d_and_a
             self.enterprise.balance_sheet['Net PP&E'] = np.append(
                 self.enterprise.balance_sheet['Net PP&E'],
                 next_npp_and_e

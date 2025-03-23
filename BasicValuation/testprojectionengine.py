@@ -60,7 +60,7 @@ class TestProjectionEngine(unittest.TestCase):
         opex_sales = np.array([0.2, 0.25, 0.22])  # 20%, 25%, 22% of revenue
 
         # Initialize revenue
-        self.enterprise.import_is({'Revenue': np.array([1000.0, 1100.0, 1320.0, 1518.0])})
+        self.enterprise.import_is({'Revenue': np.array([1100.0, 1320.0, 1518.0])})
 
         # Project operating expenses
         self.projection_engine.project_operating_expenses(opex_sales)
@@ -74,19 +74,18 @@ class TestProjectionEngine(unittest.TestCase):
         d_and_a_prior_npp_and_e = np.array([0.05, 0.05, 0.05])  # 5% of prior NPP&E
         net_cap_ex_sales = np.array([0.1, 0.1, 0.1])  # 10% of revenue
 
-        # Initialize revenue and Net PP&E
-        self.enterprise.import_is({'Revenue': np.array([1000.0, 1110.0, 1320.0, 1518.0])})
-        self.enterprise.import_bs({'Net PP&E': np.array([1000.0])})
+        # Initialize revenue
+        self.enterprise.import_is({'Revenue': np.array([1000.0, 1100.0, 1320.0, 1518.0])})
 
         # Project fixed assets
         self.projection_engine.project_fixed_assets(d_and_a_prior_npp_and_e, net_cap_ex_sales)
 
         # Expected D&A
-        expected_d_and_a = np.array([50.0, 50.0, 55.55, 62.15])  # 5% of prior NPP&E
+        expected_d_and_a = np.array([50.0, 50.0, 55.5, 62.1])  # 5% of prior NPP&E
         np.testing.assert_array_almost_equal(self.enterprise.income_statement['D&A'], expected_d_and_a)
 
         # Expected Net PP&E
-        expected_npp_and_e = np.array([1000.0, 1111.0, 1243.0, 1394.8])  # Updated NPP&E
+        expected_npp_and_e = np.array([1000.0, 1110.0, 1242.0, 1393.8])  # Updated NPP&E
         np.testing.assert_array_almost_equal(self.enterprise.balance_sheet['Net PP&E'], expected_npp_and_e)
 
     def test_project_net_working_capital(self):
