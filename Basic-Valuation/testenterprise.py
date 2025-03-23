@@ -123,12 +123,25 @@ class TestEnterprise(unittest.TestCase):
     def test_project_statements(self):
         # Initialize revenue
         self.enterprise.init_revenue(np.array([1000.0]))
+        self.enterprise.init_d_and_a(np.array([50.0]))
+
+        self.enterprise.init_npp_and_e(np.array([1000.0]))
+        self.enterprise.init_curr_assets(np.array([300.0]))
+        self.enterprise.init_curr_liabilities(np.array([150.0]))
+        self.enterprise.calc_net_working_capital()
 
         # Project income statement
         rev_growth = np.array([0.1, 0.2, 0.15])  # 10%, 20%, 15% growth
         gross_margin = np.array([0.4, 0.4, 0.35, 0.3])  # 40%, 35%, 30% gross margin
         opex_sales = np.array([0.2, 0.2, 0.25, 0.22])  # 20%, 25%, 22% of revenue
-        self.enterprise.project_statements(rev_growth, gross_margin, opex_sales)
+        d_and_a_prior_npp_and_e = np.array([0.05, 0.05, 0.05])  # D&A as % of prior NPP&E
+        net_cap_ex_sales = np.array([0.1, 0.1, 0.1])  # Net CapEx as % of revenue
+        net_working_capital_sales = np.array([0.15, 0.15, 0.15])  # NWC as % of revenue
+
+        self.enterprise.project_statements(
+            rev_growth, gross_margin, opex_sales,
+            d_and_a_prior_npp_and_e, net_cap_ex_sales, net_working_capital_sales
+        )
 
         # Expected values
         expected_revenue = np.array([1000.0, 1100.0, 1320.0, 1518.0])
@@ -136,13 +149,25 @@ class TestEnterprise(unittest.TestCase):
         expected_gross_profit = np.array([400.0, 440.0, 462.0, 455.4])
         expected_op_ex = np.array([200.0, 220.0, 330.0, 333.96])
         expected_EBITDA = np.array([200.0, 220.0, 132.0, 121.44])
+        expected_d_and_a = np.array([50.0, 50.0, 53.0, 56.95])  # Based on prior NPP&E
+        expected_EBIT = np.array([150.0, 170.0, 79.0, 64.49])
 
-        # Assertions
+        expected_net_working_capital = np.array([150.0, 165.0, 198.0, 227.7])  # Revenue * NWC %
+        expected_npp_and_e = np.array([1000.0, 1060.0, 1139.0, 1233.85])  # Updated NPP&E
+
+        # Assertions for income statement
         np.testing.assert_array_almost_equal(self.enterprise.income_statement['revenue'], expected_revenue)
         np.testing.assert_array_almost_equal(self.enterprise.income_statement['cost_of_sales'], expected_cost_of_sales)
         np.testing.assert_array_almost_equal(self.enterprise.income_statement['gross_profit'], expected_gross_profit)
         np.testing.assert_array_almost_equal(self.enterprise.income_statement['op_ex'], expected_op_ex)
         np.testing.assert_array_almost_equal(self.enterprise.income_statement['EBITDA'], expected_EBITDA)
+        np.testing.assert_array_almost_equal(self.enterprise.income_statement['d_and_a'], expected_d_and_a)
+        np.testing.assert_array_almost_equal(self.enterprise.income_statement['EBIT'], expected_EBIT)
+
+        # Assertions for balance sheet
+        np.testing.assert_array_almost_equal(self.enterprise.balance_sheet['net_working_capital'], expected_net_working_capital)
+        np.testing.assert_array_almost_equal(self.enterprise.balance_sheet['npp_and_e'], expected_npp_and_e)
+
 
 if __name__ == "__main__":
     unittest.main()
