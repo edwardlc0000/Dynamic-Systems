@@ -82,11 +82,11 @@ class TestProjectionEngine(unittest.TestCase):
         self.projection_engine.project_fixed_assets(d_and_a_prior_npp_and_e, net_cap_ex_sales)
 
         # Expected D&A
-        expected_d_and_a = np.array([50.0, 50.0, 53.0, 56.95])  # 5% of prior NPP&E
+        expected_d_and_a = np.array([50.0, 50.0, 55.5, 62.1])  # 5% of prior NPP&E
         np.testing.assert_array_almost_equal(self.enterprise.income_statement['D&A'], expected_d_and_a)
 
         # Expected Net PP&E
-        expected_npp_and_e = np.array([1000.0, 1060.0, 1139.0, 1233.85])  # Updated NPP&E
+        expected_npp_and_e = np.array([1000.0, 1100.0, 1242.0, 1393.8])  # Updated NPP&E
         np.testing.assert_array_almost_equal(self.enterprise.balance_sheet['Net PP&E'], expected_npp_and_e)
 
     def test_project_net_working_capital(self):

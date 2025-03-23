@@ -32,24 +32,24 @@ class ProjectionEngine:
 
     def project_fixed_assets(self, d_and_a_prior_npp_and_e: np.ndarray, net_cap_ex_sales: np.ndarray):
         for i in range(len(d_and_a_prior_npp_and_e)):
-            next_d_and_a = self.enterprise.balance_sheet['Net PP&E'][i] * d_and_a_prior_npp_and_e[i]
+            next_d_and_a: float = self.enterprise.balance_sheet['Net PP&E'][i] * d_and_a_prior_npp_and_e[i]
             self.enterprise.income_statement['D&A'] = np.append(self.enterprise.income_statement['D&A'], next_d_and_a)
             self.enterprise.statement_of_cash_flow['D&A'] = np.append(self.enterprise.statement_of_cash_flow['D&A'], next_d_and_a)
 
-            next_net_cap_ex = self.enterprise.income_statement['Revenue'][-len(d_and_a_prior_npp_and_e) + i] * net_cap_ex_sales[i]
+            next_net_cap_ex: float = self.enterprise.income_statement['Revenue'][-len(d_and_a_prior_npp_and_e) + i] * net_cap_ex_sales[i]
             self.enterprise.statement_of_cash_flow['Net Cap. Ex.'] = np.append(self.enterprise.statement_of_cash_flow['Net Cap. Ex.'], next_net_cap_ex)
 
-            next_cap_ex = next_d_and_a + next_net_cap_ex
+            next_cap_ex: float = next_d_and_a + next_net_cap_ex
             self.enterprise.statement_of_cash_flow['Cap. Ex.'] = np.append(self.enterprise.statement_of_cash_flow['Cap. Ex.'], next_cap_ex)
 
-            next_npp_and_e = self.enterprise.balance_sheet['Net PP&E'][-1] - next_d_and_a + next_net_cap_ex
+            next_npp_and_e: float = self.enterprise.balance_sheet['Net PP&E'][-1] + next_net_cap_ex
             self.enterprise.balance_sheet['Net PP&E'] = np.append(self.enterprise.balance_sheet['Net PP&E'], next_npp_and_e)
 
     def project_net_working_capital(self, net_working_capital_sales: np.ndarray):
         for i, nwc_sales in enumerate(net_working_capital_sales):
             self.enterprise.balance_sheet['Net Working Capital'] = np.append(
                 self.enterprise.balance_sheet['Net Working Capital'],
-                self.enterprise.income_statement['Revenue'][-len(net_working_capital_sales) + i] * net_working_capital_sales[i]
+                self.enterprise.income_statement['Revenue'][-len(net_working_capital_sales) + i] * nwc_sales
             )
 
     def project_statements(self, rev_growth: np.ndarray, gross_margin: np.ndarray,
