@@ -30,32 +30,35 @@ class Enterprise:
         self.pointer: int = pointer
         self.value: float = None
 
+        # Initialize the income statement with floating-point arrays
         self.income_statement: Dict[str, np.ndarray] = {
-            'Revenue': np.array([]),
-            'Cost of Sales': np.array([]),
-            'Gross Profit': np.array([]),
-            'Op. Ex.': np.array([]),
-            'EBITDA': np.array([]),
-            'D&A': np.array([]),
-            'EBIT': np.array([]),
-            'Interest': np.array([]),
-            'Tax': np.array([]),
-            'Net Income': np.array([])
+            'Revenue': np.array([], dtype=float),
+            'Cost of Sales': np.array([], dtype=float),
+            'Gross Profit': np.array([], dtype=float),
+            'Op. Ex.': np.array([], dtype=float),
+            'EBITDA': np.array([], dtype=float),
+            'D&A': np.array([], dtype=float),
+            'EBIT': np.array([], dtype=float),
+            'Interest': np.array([], dtype=float),
+            'Tax': np.array([], dtype=float),
+            'Net Income': np.array([], dtype=float)
         }
 
+        # Initialize the balance sheet with floating-point arrays
         self.balance_sheet: Dict[str, np.ndarray] = {
-            'Cash': np.array([]),
-            'Current Assets': np.array([]),
-            'Net PP&E': np.array([]),
-            'Current Liabilities': np.array([]),
-            'Long-Term Debt': np.array([]),
-            'Net Working Capital': np.array([])
+            'Cash': np.array([], dtype=float),
+            'Current Assets': np.array([], dtype=float),
+            'Net PP&E': np.array([], dtype=float),
+            'Current Liabilities': np.array([], dtype=float),
+            'Long-Term Debt': np.array([], dtype=float),
+            'Net Working Capital': np.array([], dtype=float)
         }
 
+        # Initialize the statement of cash flows with floating-point arrays
         self.statement_of_cash_flow: Dict[str, np.ndarray] = {
-            'D&A': np.array([]),
-            'Net Cap. Ex.': np.array([]),
-            'Cap. Ex.': np.array([]),
+            'D&A': np.array([], dtype=float),
+            'Net Cap. Ex.': np.array([], dtype=float),
+            'Cap. Ex.': np.array([], dtype=float),
         }
 
     def import_statements(self,
