@@ -16,10 +16,14 @@ class Enterprise:
             'period': np.array([]),
             'revenue': np.array([]),
             'cost_of_sales': np.array([]),
+            'gross_profit': np.array([]),
             'op_ex': np.array([]),
+            'EBITDA': np.array([]),
             'd_and_a': np.array([]),
+            'EBIT': np.array([]),
             'interest': np.array([]),
-            'tax': np.array([])
+            'tax': np.array([]),
+            'net_income': np.array([])
         }
 
         self.balance_sheet: Dict[str, np.ndarray] = {
@@ -31,41 +35,41 @@ class Enterprise:
             'debt': np.array([])
         }
 
-    def set_period(self, period: np.ndarray):
+    def init_period(self, period: np.ndarray):
         self.income_statement['period'] = np.append(self.income_statement['period'], period)
         self.balance_sheet['period'] = np.append(self.balance_sheet['period'], period)
 
-    def set_revenue(self, revenue: np.ndarray):
+    def init_revenue(self, revenue: np.ndarray):
         self.income_statement['revenue'] = np.append(self.income_statement['revenue'], revenue)
 
-    def set_cost_of_sales(self, cost_of_sales: np.ndarray):
+    def init_cost_of_sales(self, cost_of_sales: np.ndarray):
         self.income_statement['cost_of_sales'] = np.append(self.income_statement['cost_of_sales'], cost_of_sales)
 
-    def set_op_ex(self, op_ex: np.ndarray):
+    def init_op_ex(self, op_ex: np.ndarray):
         self.income_statement['op_ex'] = np.append(self.income_statement['op_ex'], op_ex)
 
-    def set_d_and_a(self, d_and_a: np.ndarray):
+    def init_d_and_a(self, d_and_a: np.ndarray):
         self.income_statement['d_and_a'] = np.append(self.income_statement['d_and_a'], d_and_a)
 
-    def set_interest(self, interest: np.ndarray):
+    def init_interest(self, interest: np.ndarray):
         self.income_statement['interest'] = np.append(self.income_statement['interest'], interest)
 
-    def set_tax(self, tax: np.ndarray):
+    def init_tax(self, tax: np.ndarray):
         self.income_statement['tax'] = np.append(self.income_statement['tax'], tax)
 
-    def set_cash(self, cash: np.ndarray):
+    def init_cash(self, cash: np.ndarray):
         self.balance_sheet['cash'] = np.append(self.balance_sheet['cash'], cash)
 
-    def set_curr_assets(self, curr_assets: np.ndarray):
+    def init_curr_assets(self, curr_assets: np.ndarray):
         self.balance_sheet['curr_assets'] = np.append(self.balance_sheet['curr_assets'], curr_assets)
 
-    def set_curr_liabilities(self, curr_liabilities: np.ndarray):
+    def init_curr_liabilities(self, curr_liabilities: np.ndarray):
         self.balance_sheet['curr_liabilities'] = np.append(self.balance_sheet['curr_liabilities'], curr_liabilities)
 
-    def set_npp_and_e(self, npp_and_e: np.ndarray):
+    def init_npp_and_e(self, npp_and_e: np.ndarray):
         self.balance_sheet['npp_and_e'] = np.append(self.balance_sheet['npp_and_e'], npp_and_e)
 
-    def set_debt(self, debt: np.ndarray):
+    def init_debt(self, debt: np.ndarray):
         self.balance_sheet['debt'] = np.append(self.balance_sheet['debt'], debt)
 
     def calc_gross_profit(self):
@@ -88,6 +92,36 @@ class Enterprise:
     def calc_net_working_capital(self):
         self.balance_sheet['net_working_capital'] = (self.balance_sheet['curr_assets']
                                                      -self.balance_sheet['curr_liabilities'])
+        
+    def project_revenue(self, rev_growth: np.ndarray):
+        for growth in rev_growth:
+            self.income_statement['revenue'] = np.append(
+                self.income_statement['revenue'],
+                self.income_statement['revenue'][-1] * (1 + growth)
+            )
+
+    def project_cost_of_sales(self, gross_margin: np.ndarray):
+        for i, margin in enumerate(gross_margin):
+            self.income_statement['cost_of_sales'] = np.append(
+                self.income_statement['cost_of_sales'],
+                self.income_statement['revenue'][-len(gross_margin) + i] * (1 - margin)
+            )
+
+    def project_operating_expenses(self, opex_sales: np.ndarray):
+        for i, opex in enumerate(opex_sales):
+            self.income_statement['op_ex'] = np.append(
+                self.income_statement['op_ex'],
+                self.income_statement['revenue'][-len(opex_sales) + i] * opex
+            )
+
+    def project_statements(self, rev_growth: np.ndarray, gross_margin: np.ndarray,
+                           opex_sales: np.ndarray):
+        self.project_revenue(rev_growth)
+        self.project_cost_of_sales(gross_margin)
+        self.calc_gross_profit()
+        self.project_operating_expenses(opex_sales)
+        self.calc_EBITDA()
+
 
     def __str__(self):
         return f"Enterprise(name={self.name}, ticker={self.ticker}, shares_outstanding={self.shares_outstanding})"
