@@ -120,7 +120,12 @@ class Enterprise:
     def get_statement_of_cash_flows(self) -> pd.DataFrame:
         return pd.DataFrame.from_dict(self.statement_of_cash_flow, orient='columns')
 
-    def validate_statements(*statements):
+    '''
+    Ensures that the financial statements passed as an input are of the same length.
+
+    Args: statements (Dict[str, np.ndarray]): Dictionaries containing financial statement data.
+    '''
+    def validate_statements(self, *statements: Dict[str, np.ndarray]):
         lengths = []
         for statement in statements:
             lengths.extend(map(len, statement.values()))

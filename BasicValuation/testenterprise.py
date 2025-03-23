@@ -68,6 +68,26 @@ class TestEnterprise(unittest.TestCase):
         for key, value in self.statement_of_cash_flow.items():
             np.testing.assert_array_equal(self.enterprise.statement_of_cash_flow[key], value)
 
+    def test_import_statements(self):
+        # Import all financial statements at once
+        self.enterprise.import_statements(
+            self.income_statement,
+            self.balance_sheet,
+            self.statement_of_cash_flow
+        )
+    
+        # Assert that the income statement data was imported correctly
+        for key, value in self.income_statement.items():
+            np.testing.assert_array_equal(self.enterprise.income_statement[key], value)
+    
+        # Assert that the balance sheet data was imported correctly
+        for key, value in self.balance_sheet.items():
+            np.testing.assert_array_equal(self.enterprise.balance_sheet[key], value)
+    
+        # Assert that the statement of cash flow data was imported correctly
+        for key, value in self.statement_of_cash_flow.items():
+            np.testing.assert_array_equal(self.enterprise.statement_of_cash_flow[key], value)
+    
     def test_get_income_statement(self):
         # Import income statement data and retrieve it as a DataFrame
         self.enterprise.import_is(self.income_statement)
