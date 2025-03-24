@@ -7,7 +7,7 @@ from enterprise import Enterprise
 class TestEnterprise(unittest.TestCase):
     def setUp(self):
         # Create an Enterprise instance for testing
-        self.enterprise = Enterprise(name="Test Corp", ticker="TST", shares_outstanding=1000)
+        self.enterprise = Enterprise(name="Test Corp", ticker="TST", shares_outstanding=1000, debt_value=400.0)
 
         # Sample data for income statement
         self.income_statement = {

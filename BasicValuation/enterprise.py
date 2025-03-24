@@ -20,13 +20,15 @@ class Enterprise:
         shares_outstanding (int): The number of shares outstanding.
         pointer (int): A pointer to track the current period (default is 0).
     """
-    def __init__(self, name: str, ticker: str, shares_outstanding: int, stat_tax_rate: float = 0.21,pointer: int = 0):
+    def __init__(self, name: str, ticker: str, shares_outstanding: int, debt_value: float, stat_tax_rate: float = 0.21,pointer: int = 0):
         self.name: str = name
         self.ticker: str = ticker
         self.shares_outstanding: int = shares_outstanding
         self.stat_tax_rate: float = stat_tax_rate
         self.pointer: int = pointer
-        self.value: float = None
+        self.enterprise_value: float = None
+        self.equity_value: float = None
+        self.debt_value: float = None
 
         # Initialize the income statement with floating-point arrays
         self.income_statement: Dict[str, np.ndarray] = {
