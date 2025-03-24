@@ -1,15 +1,12 @@
-# basicvaluation.py
+# enterprise.py
 # Created On: 2025-03-22
 # Created By: Edward Cromwell
-# An exploration of basic valuations of US corporations using numerical methods
+# A class for modeling the financial statements of enterprises
 
 import numpy as np
 import pandas as pd
 from typing import Dict
 from typing import Final
-
-# Define a constant for the statutory tax rate
-stat_tax_rate: Final[float] = 0.21
 
 
 class Enterprise:
@@ -23,10 +20,11 @@ class Enterprise:
         shares_outstanding (int): The number of shares outstanding.
         pointer (int): A pointer to track the current period (default is 0).
     """
-    def __init__(self, name: str, ticker: str, shares_outstanding: int, pointer: int = 0):
+    def __init__(self, name: str, ticker: str, shares_outstanding: int, stat_tax_rate: float = 0.21,pointer: int = 0):
         self.name: str = name
         self.ticker: str = ticker
         self.shares_outstanding: int = shares_outstanding
+        self.stat_tax_rate: float = stat_tax_rate
         self.pointer: int = pointer
         self.value: float = None
 
@@ -59,6 +57,19 @@ class Enterprise:
             'D&A': np.array([], dtype=float),
             'Net Cap. Ex.': np.array([], dtype=float),
             'Cap. Ex.': np.array([], dtype=float),
+        }
+
+        # Initializes the discounted cash flow analysis with floating-point arrays
+        self.discounted_cash_flow: Dict[str, np.ndarray] = {
+            'EBITDA': np.array([], dtype=float),
+            'D&A': np.array([], dtype=float),
+            'EBIT': np.array([], dtype=float),
+            'Tax': np.array([], dtype=float),
+            'NOPAT': np.array([], dtype=float),
+            'Change in NWC': np.array([], dtype=float),
+            'Cap. Ex.': np.array([], dtype=float),
+            'Free Cash Flow': np.array([], dtype=float),
+            'PV Free Cash Flow': np.array([], dtype=float)
         }
 
     def import_statements(self,
@@ -119,6 +130,14 @@ class Enterprise:
     """
     def get_statement_of_cash_flows(self) -> pd.DataFrame:
         return pd.DataFrame.from_dict(self.statement_of_cash_flow, orient='columns')
+
+    """
+    Retrieve the statement of cash flows as a DataFrame.
+
+    Returns: pd.DataFrame: The statement of cash flows.
+    """
+    def get_discounted_cash_flow(self) -> pd.DataFrame:
+        return pd.DataFrame.from_dict(self.discounted_cash_flow, orient='columns')
 
     '''
     Ensures that the financial statements passed as an input are of the same length.

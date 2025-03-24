@@ -1,4 +1,7 @@
-
+# enterprise.py
+# Created On: 2025-03-23
+# Created By: Edward Cromwell
+# A class for projecting and analyzing the financial statements of enterprises
 
 import numpy as np
 
@@ -74,7 +77,7 @@ class ProjectionEngine:
                 self.enterprise.statement_of_cash_flow['D&A'],
                 next_d_and_a
             )
-            
+
             next_net_cap_ex: float = self.enterprise.income_statement['Revenue'][-len(net_cap_ex_sales) + i] * net_cap_ex_sales[i]
             self.enterprise.statement_of_cash_flow['Net Cap. Ex.'] = np.append(
                 self.enterprise.statement_of_cash_flow['Net Cap. Ex.'],
@@ -99,3 +102,31 @@ class ProjectionEngine:
                 self.enterprise.balance_sheet['Net Working Capital'],
                 self.enterprise.income_statement['Revenue'][-len(net_working_capital_sales) + i] * nwc_sales
             )
+
+    def project_fcf(self):
+        self.enterprise.discounted_cash_flow['EBITDA'] = self.enterprise.income_statement['EBITDA']
+        self.enterprise.discounted_cash_flow['D&A'] = self.enterprise.income_statement['D&A']
+        self.enterprise.discounted_cash_flow['EBIT'] = self.enterprise.income_statement['EBIT']
+        self.enterprise.discounted_cash_flow['Tax'] = np.multiply(self.enterprise.income_statement['EBIT'],
+                                                                  self.enterprise.stat_tax_rate)
+        self.enterprise.discounted_cash_flow['NOPAT'] = (self.enterprise.discounted_cash_flow['EBIT']
+                                                         - self.enterprise.discounted_cash_flow['Tax'])
+        
+        self.enterprise.discounted_cash_flow['Change in NWC'] = np.append(
+            self.enterprise.discounted_cash_flow['Change in NWC'],
+            0.0
+        )
+        for i in range(0, len(self.enterprise.balance_sheet['Net Working Capital']) - 1):
+            self.enterprise.discounted_cash_flow['Change in NWC'] = np.append(
+                self.enterprise.discounted_cash_flow['Change in NWC'],
+                self.enterprise.balance_sheet['Net Working Capital'][i + 1]
+                - self.enterprise.balance_sheet['Net Working Capital'][i]
+            )
+        
+        self.enterprise.discounted_cash_flow['Cap. Ex.'] = self.enterprise.statement_of_cash_flow['Cap. Ex.']
+
+        self.enterprise.discounted_cash_flow['Free Cash Flow'] = (self.enterprise.discounted_cash_flow['NOPAT']
+                                                       + self.enterprise.discounted_cash_flow['D&A']
+                                                       - self.enterprise.discounted_cash_flow['Change in NWC']
+                                                       - self.enterprise.discounted_cash_flow['Cap. Ex.']
+                                                       )

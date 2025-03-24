@@ -131,6 +131,35 @@ class TestProjectionEngine(unittest.TestCase):
         np.testing.assert_array_almost_equal(self.enterprise.income_statement['Op. Ex.'], expected_op_ex)
         np.testing.assert_array_almost_equal(self.enterprise.income_statement['EBITDA'], expected_EBITDA)
 
+    def test_project_fcf(self):
+        # Initialize required data for the test
+        self.enterprise.import_is({
+            'EBITDA': np.array([200.0, 220.0, 132.0, 121.44]),
+            'D&A': np.array([50.0, 55.0, 60.0, 65.0]),
+            'EBIT': np.array([150.0, 165.0, 72.0, 56.44])
+        })
+        self.enterprise.import_bs({
+            'Net Working Capital': np.array([150.0, 165.0, 198.0, 227.7])
+        })
+        self.enterprise.import_scf({
+            'Cap. Ex.': np.array([100.0, 110.0, 120.0, 130.0])
+        })
+
+        # Project free cash flow
+        self.projection_engine.project_fcf()
+
+        # Expected values
+        expected_tax = np.array([31.5, 34.65, 15.12, 11.8524])  # EBIT * stat_tax_rate (0.21)
+        expected_nopat = np.array([118.5, 130.35, 56.88, 44.5876])  # EBIT - Tax
+        expected_change_in_nwc = np.array([0.0, 15.0, 33.0, 29.7])  # Change in Net Working Capital
+        expected_fcf = np.array([68.5, 60.35, -36.12, -50.1124])  # NOPAT + D&A - Change in NWC - Cap. Ex.
+
+        # Assertions
+        np.testing.assert_array_almost_equal(self.enterprise.discounted_cash_flow['Tax'], expected_tax)
+        np.testing.assert_array_almost_equal(self.enterprise.discounted_cash_flow['NOPAT'], expected_nopat)
+        np.testing.assert_array_almost_equal(self.enterprise.discounted_cash_flow['Change in NWC'], expected_change_in_nwc)
+        np.testing.assert_array_almost_equal(self.enterprise.discounted_cash_flow['Free Cash Flow'], expected_fcf)
+
 if __name__ == "__main__":
     unittest.main()
 
