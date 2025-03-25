@@ -28,7 +28,7 @@ class Enterprise:
         self.pointer: int = pointer
         self.enterprise_value: float = None
         self.equity_value: float = None
-        self.debt_value: float = None
+        self.debt_value: float = debt_value
 
         # Initialize the income statement with floating-point arrays
         self.income_statement: Dict[str, np.ndarray] = {

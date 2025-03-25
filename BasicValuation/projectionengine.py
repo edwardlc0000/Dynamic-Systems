@@ -4,6 +4,7 @@
 # A class for projecting and analyzing the financial statements of enterprises
 
 import numpy as np
+from scipy.optimize import root_scalar
 
 from enterprise import Enterprise
 
@@ -130,3 +131,56 @@ class ProjectionEngine:
                                                        - self.enterprise.discounted_cash_flow['Change in NWC']
                                                        - self.enterprise.discounted_cash_flow['Cap. Ex.']
                                                        )
+        
+    def dcf_model(self, unlevered_cost_equity: float, cost_of_debt: float,
+                  begin_lev: float, growth_rate: float):
+        
+        def lev_difference(begin_lev, unlevered_cost_equity, cost_of_debt, growth_rate):
+            cost_of_equity: float = (unlevered_cost_equity
+                                 + ((begin_lev/(1 - begin_lev))
+                                    * (unlevered_cost_equity - cost_of_debt)))
+            wacc = (begin_lev * (1 - self.enterprise.stat_tax_rate) * cost_of_debt
+                    + (1- begin_lev) * cost_of_equity)
+            
+            enterprise_value: float = self.calculate_enterprise_value(wacc, growth_rate)
+            debt_value: float = self.enterprise.debt_value
+            
+            ending_lev = debt_value/enterprise_value
+    
+            return ending_lev - begin_lev
+        
+        result = root_scalar(lambda begin_lev: lev_difference(begin_lev, unlevered_cost_equity, cost_of_debt, growth_rate), 
+                             x0=0.5, method='secant')
+        
+        final_leverage = result.root
+
+        final_cost_of_equity = (unlevered_cost_equity
+                                + ((final_leverage / (1 - final_leverage))
+                                * (unlevered_cost_equity - cost_of_debt)))
+        final_wacc = (final_leverage * (1 - self.enterprise.stat_tax_rate) * cost_of_debt
+                    + (1 - final_leverage) * final_cost_of_equity)
+        
+        print(final_wacc)
+        enterprise_value: float = self.calculate_enterprise_value(final_wacc, growth_rate)
+
+        equity_value: float = enterprise_value - self.enterprise.debt_value
+        self.enterprise.equity_value = equity_value
+
+        fcf: np.ndarray = self.enterprise.discounted_cash_flow['Free Cash Flow']
+        discount_factors: np.ndarray = 1/((1 + final_wacc) ** np.arange(0, len(fcf)))
+        self.enterprise.discounted_cash_flow['PV Free Cash Flow'] = fcf * discount_factors
+
+    def calculate_enterprise_value(self, wacc: float, growth_rate: float):
+        if wacc <= growth_rate:
+            raise ValueError("WACC must be greater than the growth rate.")
+        
+        fcf: np.ndarray = self.enterprise.discounted_cash_flow['Free Cash Flow']
+        discount_factors: np.ndarray = 1/((1 + wacc) ** np.arange(0, len(fcf)))
+
+        epsilon = np.finfo(float).eps  # Small value to prevent division by a value close to zero
+        
+        pv_fcf = np.sum(fcf * discount_factors)
+        terminal_value = (fcf[-1]/(wacc - growth_rate + epsilon)) * discount_factors[-1]
+        enterprise_value = pv_fcf + terminal_value
+
+        return enterprise_value
