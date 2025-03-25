@@ -138,7 +138,7 @@ class ProjectionEngine:
         result = root_scalar(lambda begin_lev: self.lev_difference(begin_lev, unlevered_cost_equity, cost_of_debt, growth_rate), 
                              bracket=[0.0000, 0.9999], method='brentq')
         
-        final_leverage = result.root
+        final_leverage: float = result.root
 
         final_cost_of_equity = (unlevered_cost_equity
                                 + ((final_leverage / (1 - final_leverage))
@@ -180,7 +180,7 @@ class ProjectionEngine:
         cost_of_equity: float = (unlevered_cost_equity
                                 + ((begin_lev/(1 - begin_lev))
                                 * (unlevered_cost_equity - cost_of_debt)))
-        wacc = (begin_lev * (1 - self.enterprise.stat_tax_rate) * cost_of_debt
+        wacc: float = (begin_lev * (1 - self.enterprise.stat_tax_rate) * cost_of_debt
                 + (1- begin_lev) * cost_of_equity)
         
         enterprise_value: float = self.calculate_enterprise_value(wacc, growth_rate)

@@ -74,6 +74,11 @@ class Enterprise:
             'PV Free Cash Flow': np.array([], dtype=float)
         }
 
+    """
+    Import the financial statement data into the Enterprise instance
+
+    Args: statements (Dict[str, np.ndarray]): Dictionaries containing financial statement data.
+    """
     def import_statements(self,
                           income_statement: Dict[str, np.ndarray],
                           balance_sheet: Dict[str, np.ndarray],
@@ -86,58 +91,33 @@ class Enterprise:
         self.import_scf(statement_of_cash_flow)
 
     """
-    Import data into the income statement.
+    Import data into the financial statements.
 
-    Args: income_statement (Dict[str, np.ndarray]): A dictionary containing income statement data.
+    Args: income_statement (Dict[str, np.ndarray]): A dictionary containing financial statement data.
     """
     def import_is(self, income_statement: Dict[str, np.ndarray]):
         self.income_statement = self.income_statement | income_statement
 
-    """
-    Import data into the balance sheet.
-
-    Args: balance_sheet (Dict[str, np.ndarray]): A dictionary containing balance sheet data.
-    """
     def import_bs(self, balance_sheet: Dict[str, np.ndarray]):
         self.balance_sheet = self.balance_sheet | balance_sheet
 
-    """
-    Import data into the statement of cash flows.
-
-    Args: statement_of_cash_flow (Dict[str, np.ndarray]): A dictionary containing cash flow statement data.
-    """
     def import_scf(self, statement_of_cash_flow: Dict[str, np.ndarray]):
         self.statement_of_cash_flow = self.statement_of_cash_flow | statement_of_cash_flow
     
     """
-    Retrieve the income statement as a DataFrame.
+    Retrieve the  financial statements as a DataFrame.
 
-    Returns: pd.DataFrame: The income statement.
+    Returns: pd.DataFrame: The financial statement.
     """
     def get_income_statement(self) -> pd.DataFrame:
         return pd.DataFrame.from_dict(self.income_statement, orient='columns')
-    
-    """
-    Retrieve the balance sheet as a DataFrame.
 
-    Returns: pd.DataFrame: The income balance sheet.
-    """
     def get_balance_sheet(self) -> pd.DataFrame:
         return pd.DataFrame.from_dict(self.balance_sheet, orient='columns')
     
-    """
-    Retrieve the statement of cash flows as a DataFrame.
-
-    Returns: pd.DataFrame: The statement of cash flows.
-    """
     def get_statement_of_cash_flows(self) -> pd.DataFrame:
         return pd.DataFrame.from_dict(self.statement_of_cash_flow, orient='columns')
 
-    """
-    Retrieve the statement of cash flows as a DataFrame.
-
-    Returns: pd.DataFrame: The statement of cash flows.
-    """
     def get_discounted_cash_flow(self) -> pd.DataFrame:
         return pd.DataFrame.from_dict(self.discounted_cash_flow, orient='columns')
 
