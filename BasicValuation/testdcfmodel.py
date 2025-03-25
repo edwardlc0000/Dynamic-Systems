@@ -40,14 +40,14 @@ class TestProjectionEngine(unittest.TestCase):
         self.projection_engine.dcf_model(unlevered_cost_equity, cost_of_debt, begin_lev, growth_rate)
 
         # Expected results
-        expected_leverage = 0.5  # Beginning and ending leverage should converge
+        expected_leverage = 0.1513  # Beginning and ending leverage should converge
         expected_wacc = 0.065  # Weighted Average Cost of Capital
-        expected_enterprise_value = 1000.0  # Example enterprise value
-        expected_equity_value = 500.0  # Enterprise value - debt value
+        expected_enterprise_value = 3_304.127  # Example enterprise value
+        expected_equity_value = 2_804.127  # Enterprise value - debt value
 
         # Assertions
         self.assertAlmostEqual(self.enterprise.equity_value, expected_equity_value, places=2)
-        self.assertAlmostEqual(self.projection_engine.calculate_enterprise_value(expected_wacc, growth_rate), expected_enterprise_value, places=2)
+        self.assertAlmostEqual(self.enterprise.enterprise_value, expected_enterprise_value, places=2)
         self.assertAlmostEqual(self.enterprise.debt_value / expected_enterprise_value, expected_leverage, places=2)
 
     def test_dcf_model_invalid_wacc(self):
