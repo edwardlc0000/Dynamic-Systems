@@ -134,4 +134,4 @@ class Enterprise:
             raise ValueError("Statements lengths must be the same")
 
     def __str__(self):
-        return f"Enterprise(name= {self.name}, ticker= {self.ticker}, value= {self.value},shares_outstanding= {self.shares_outstanding})"
+        return f"Enterprise(name= {self.name}, ticker= {self.ticker}, enterprise_value= {self.enterprise_value}, equity_value= {self.equity_value}, shares_outstanding= {self.shares_outstanding})"
