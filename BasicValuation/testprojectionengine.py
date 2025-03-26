@@ -6,7 +6,7 @@ from projectionengine import ProjectionEngine
 class TestProjectionEngine(unittest.TestCase):
     def setUp(self):
         # Create an Enterprise instance for testing
-        self.enterprise = Enterprise(name="Test Corp", ticker="TST", shares_outstanding=1000)
+        self.enterprise = Enterprise(name="Test Corp", ticker="TST", shares_outstanding=1000, debt_value=0)
 
         # Import initial data into the Enterprise instance
         self.enterprise.import_is({

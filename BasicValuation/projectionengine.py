@@ -68,7 +68,7 @@ class ProjectionEngine:
                                                -self.enterprise.income_statement['Tax'])
 
     def project_fixed_assets(self, d_and_a_prior_npp_and_e: np.ndarray, net_cap_ex_sales: np.ndarray):
-        for i in range(len(d_and_a_prior_npp_and_e)):
+        for i in range(0, len(d_and_a_prior_npp_and_e)):
             next_d_and_a: float = self.enterprise.balance_sheet['Net PP&E'][self.enterprise.pointer + i] * d_and_a_prior_npp_and_e[i]
             self.enterprise.income_statement['D&A'] = np.append(
                 self.enterprise.income_statement['D&A'],
@@ -134,16 +134,18 @@ class ProjectionEngine:
         
     def dcf_model(self, unlevered_cost_equity: float, cost_of_debt: float,
                   begin_lev: float, growth_rate: float):
-        
-        result = root_scalar(lambda begin_lev: self.lev_difference(begin_lev, unlevered_cost_equity, cost_of_debt, growth_rate), 
+        if begin_lev >= 1.0: 
+            raise ValueError("Leverage must be less than 100%.")
+
+        result: float = root_scalar(lambda begin_lev: self.lev_difference(begin_lev, unlevered_cost_equity, cost_of_debt, growth_rate), 
                              bracket=[0.0000, 0.9999], method='brentq')
         
         final_leverage: float = result.root
 
-        final_cost_of_equity = (unlevered_cost_equity
+        final_cost_of_equity: float = (unlevered_cost_equity
                                 + ((final_leverage / (1 - final_leverage))
                                 * (unlevered_cost_equity - cost_of_debt)))
-        final_wacc = (final_leverage * (1 - self.enterprise.stat_tax_rate) * cost_of_debt
+        final_wacc: float = (final_leverage * (1 - self.enterprise.stat_tax_rate) * cost_of_debt
                     + (1 - final_leverage) * final_cost_of_equity)
         
         enterprise_value: float = self.calculate_enterprise_value(final_wacc, growth_rate)
