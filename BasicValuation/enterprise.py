@@ -5,7 +5,7 @@
 
 import numpy as np
 import pandas as pd
-from typing import Dict
+from typing import Dict, List
 from typing import Final
 
 
@@ -127,7 +127,7 @@ class Enterprise:
     Args: statements (Dict[str, np.ndarray]): Dictionaries containing financial statement data.
     '''
     def validate_statements(self, *statements: Dict[str, np.ndarray]):
-        lengths = []
+        lengths: List[int] = []
         for statement in statements:
             lengths.extend(map(len, statement.values()))
         if len(set(lengths)) != 1:
