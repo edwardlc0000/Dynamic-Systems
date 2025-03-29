@@ -66,7 +66,7 @@ def load_scf():
     )
 
     scf_name: str = fd.askopenfilename(
-        title='Select the Balance Sheet',
+        title='Select the Statment of Cash Flows',
         filetypes=file_types
     )
 
