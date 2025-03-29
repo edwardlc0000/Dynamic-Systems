@@ -5,81 +5,40 @@
 
 import pandas as pd
 import numpy as np
-from tkinter import filedialog as fd
+import wx
 from pathlib import Path
-from typing import Tuple, Dict
+from typing import Dict
 
-def load_is() -> Dict[str, np.ndarray]:
-    file_types: Tuple[str] = (
-        ('Excel Files', '.xlsx'),
-        ('Delimited Files', '.csv')
+def load_file() -> Dict[str, np.ndarray]:
+    app = wx.App(False)
+
+    dialog = wx.FileDialog(
+        None,
+        "Select a File",
+        wildcard="Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv",
+        style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
     )
 
-    is_name: str = fd.askopenfilename(
-        title='Select the Income Statement',
-        filetypes=file_types
-    )
-
-    is_path: Path = Path(is_name)
-
-    if is_path.suffix == '.csv':
-        is_df: pd.DataFrame = pd.read_csv(is_path)
-    elif is_path.suffix == '.xlsx':
-        is_df: pd.DataFrame = pd.read_excel(is_path)
+    if dialog.ShowModal() == wx.ID_OK:
+        file_name = dialog.GetPath()
     else:
-        raise ValueError(f"Unsupported file type: {is_path.suffix()}. Please select a .csv or .xlsx file.")
-    
-    is_dict: Dict[str, np.ndarray] = is_df.to_dict()
-    is_dict = {key: np.array(list(values.values())) for key, values in is_dict.items()}
+        print("No file selected.")
+        dialog.Destroy()
+        app.Exit()
+        return {}
 
-    return is_dict
+    dialog.Destroy()
+    app.Destroy()
 
-def load_bs() -> Dict[str, np.ndarray]:
-    file_types: Tuple[str] = (
-        ('Excel Files', '.xlsx'),
-        ('Delimited Files', '.csv')
-    )
-
-    scf_name: str = fd.askopenfilename(
-        title='Select the Balance Sheet',
-        filetypes=file_types
-    )
-
-    scf_path: Path = Path(scf_name)
-
-    if scf_path.suffix == '.csv':
-        scf_df: pd.DataFrame = pd.read_csv(scf_path)
-    elif scf_path.suffix == '.xlsx':
-        scf_df: pd.DataFrame = pd.read_excel(scf_path)
+    stmt_path: Path = Path(file_name)
+    if stmt_path.suffix == '.csv':
+        stmt_df: pd.DataFrame = pd.read_csv(stmt_path)
+    elif stmt_path.suffix == '.xlsx':
+        stmt_df: pd.DataFrame = pd.read_excel(stmt_path)
     else:
-        raise ValueError(f"Unsupported file type: {scf_path.suffix()}. Please select a .csv or .xlsx file.")
-    
-    scf_dict: Dict[str, np.ndarray] = scf_df.to_dict()
-    scf_dict = {key: np.array(list(values.values())) for key, values in scf_dict.items()}
+        raise ValueError(f"Unsupported file type: {stmt_path.suffix}. Please select a .csv or .xlsx file.")
 
-    return scf_dict
+    stmt: Dict[str, np.ndarray] = stmt_df.to_dict()
+    stmt = {key: np.array(list(values.values())) for key, values in stmt.items()}
 
-def load_scf() -> Dict[str, np.ndarray]:
-    file_types: Tuple[str] = (
-        ('Excel Files', '.xlsx'),
-        ('Delimited Files', '.csv')
-    )
-
-    scf_name: str = fd.askopenfilename(
-        title='Select the Statment of Cash Flows',
-        filetypes=file_types
-    )
-
-    scf_path: Path = Path(scf_name)
-
-    if scf_path.suffix == '.csv':
-        scf_df: pd.DataFrame = pd.read_csv(scf_path)
-    elif scf_path.suffix == '.xlsx':
-        scf_df: pd.DataFrame = pd.read_excel(scf_path)
-    else:
-        raise ValueError(f"Unsupported file type: {scf_path.suffix()}. Please select a .csv or .xlsx file.")
-    
-    scf_dict: Dict[str, np.ndarray] = scf_df.to_dict()
-    scf_dict = {key: np.array(list(values.values())) for key, values in scf_dict.items()}
-
-    return scf_dict
+    return stmt
