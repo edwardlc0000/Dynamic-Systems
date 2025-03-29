@@ -132,7 +132,7 @@ class Enterprise:
             lengths.extend(map(len, statement.values()))
         if len(set(lengths)) != 1:
             raise ValueError("Statements lengths must be the same")
-        self.pointer = set(lengths)[0] - 1
+        self.pointer = lengths[0] - 1
 
     def __str__(self):
         return f"Enterprise(name= {self.name}, ticker= {self.ticker}, enterprise_value= {self.enterprise_value}, equity_value= {self.equity_value}, shares_outstanding= {self.shares_outstanding})"

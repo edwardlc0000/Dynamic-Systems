@@ -136,7 +136,7 @@ class ProjectionEngine:
                   begin_lev: float, growth_rate: float):
         if begin_lev >= 1.0: 
             raise ValueError("Leverage must be less than 100%.")
-
+        
         result = root_scalar(lambda begin_lev: self.lev_difference(begin_lev, unlevered_cost_equity, cost_of_debt, growth_rate), 
                              bracket=[0.0000, 0.9999], method='brentq')
         
