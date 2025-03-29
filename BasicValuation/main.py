@@ -63,10 +63,14 @@ def main():
                                          net_working_capital_sales=projection_data['Net Working Capital (% of Revenue)'])
     projection_engine.project_fcf()
 
-    projection_engine.dcf_model(unlevered_cost_equity=0.08,
-                                cost_of_debt=0.05,
+    unlevered_cost_equity: float = float(input("Enter the unlevered cost of equity:\t"))
+    cost_of_debt: float = float(input("Enter the unlevered cost of debt:\t"))
+    growth_rate: float = float(input("Enter the growth rate:\t\t\t"))
+
+    projection_engine.dcf_model(unlevered_cost_equity=unlevered_cost_equity,
+                                cost_of_debt=cost_of_debt,
                                 begin_lev=0.5,
-                                growth_rate=0.02)
+                                growth_rate=growth_rate)
     print(focus_entity)
 
 if __name__ == "__main__":
