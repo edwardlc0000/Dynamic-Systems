@@ -24,7 +24,7 @@ def load_file() -> Dict[str, np.ndarray]:
     else:
         print("No file selected.")
         dialog.Destroy()
-        app.Exit()
+        app.Destroy()
         return {}
 
     dialog.Destroy()
