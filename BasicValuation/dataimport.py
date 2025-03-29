@@ -9,7 +9,7 @@ from tkinter import filedialog as fd
 from pathlib import Path
 from typing import Tuple, Dict
 
-def load_is():
+def load_is() -> Dict[str, np.ndarray]:
     file_types: Tuple[str] = (
         ('Excel Files', '.xlsx'),
         ('Delimited Files', '.csv')
@@ -34,7 +34,7 @@ def load_is():
 
     return is_dict
 
-def load_bs():
+def load_bs() -> Dict[str, np.ndarray]:
     file_types: Tuple[str] = (
         ('Excel Files', '.xlsx'),
         ('Delimited Files', '.csv')
@@ -59,7 +59,7 @@ def load_bs():
 
     return scf_dict
 
-def load_scf():
+def load_scf() -> Dict[str, np.ndarray]:
     file_types: Tuple[str] = (
         ('Excel Files', '.xlsx'),
         ('Delimited Files', '.csv')
