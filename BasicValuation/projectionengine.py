@@ -135,7 +135,7 @@ class ProjectionEngine:
     def dcf_model(self, unlevered_cost_equity: float, cost_of_debt: float,
                   begin_lev: float, growth_rate: float):
         
-        if self.enterprise.discounted_cash_flow['Free Cash Flow'] < 0.0:
+        if self.enterprise.discounted_cash_flow['Free Cash Flow'][-1] < 0.0:
             self.enterprise.enterprise_value = -self.enterprise.debt_value
             self.enterprise.equity_value = 0
             return
