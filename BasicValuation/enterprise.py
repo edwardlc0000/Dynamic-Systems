@@ -135,4 +135,4 @@ class Enterprise:
         self.pointer = lengths[0] - 1
 
     def __str__(self):
-        return f"Enterprise(name= {self.name}, ticker= {self.ticker}, enterprise_value= {self.enterprise_value}, equity_value= {self.equity_value}, shares_outstanding= {self.shares_outstanding})"
+        return f"Enterprise(name= {self.name}, ticker= {self.ticker}, enterprise_value= {round(self.enterprise_value, 2)}, equity_value= {round(self.equity_value, 2)}, shares_outstanding= {self.shares_outstanding})"
