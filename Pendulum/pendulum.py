@@ -5,6 +5,7 @@
 
 import numpy as np
 from typing import Final
+from matplotlib import pyplot as plt
 
 g: Final[float] = 9.8 # gravity approximation
 
@@ -34,3 +35,20 @@ class Pendulum:
     # convert trace path to numpy array
     def get_trace_path(self):
         return np.array(self.trace_path)
+
+if __name__ == "__main__":
+    p = Pendulum(L=1, theta_0=np.pi / 3, omega_0=0, mu=0.5)
+    p.update_theta(T=100, step=0.01)
+
+    trace_path = p.get_trace_path()
+
+    plt.figure(figsize=(5, 5))
+    plt.plot(trace_path[:, 0], trace_path[:, 1], label='Theta')
+    plt.title('Angular Velocity vs Angle')
+    plt.xlabel('Angle (radians)')
+    plt.ylabel('Angular Velocity (rad/s)')
+    plt.grid(True)
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()
